@@ -1,18 +1,59 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose'); //Adds mongoose as a usable dependency
+mongoose.connect('mongodb://localhost/mongo_creative_proj', { useNewUrlParser: true });
+var db = mongoose.connection; //Saves the connection as a variable to use
+db.on('error', console.error.bind(console, 'connection error:')); //Checks for connection errors
+db.once('open', function() { //Lets us know when we're connected
+    console.log('Connected');
+});
 
-var CTBscores = mongoose.createConnection('mongodb://localhost/CTBscores'); //Connects to a mongo database called "commentDB"
-var RTCscores = mongoose.createConnection('mongodb://localhost/RTCscores');
 
-var CTBscore = CTBscores.model('Model', new mongoose.Schema({
-    Name: String,
-    Score: Number
+var CTBscores = mongoose.createConnection('mongodb://localhost/CTB_HighScores'); //Connects to a mongo database called "commentDB"
+
+var CTB_HighScore = CTBscores.model('CTB_HighScore', new mongoose.Schema({
+    name: String,
+    score: {type: Number, default: 0},
 }));
-var RTCscore = RTCscores.model('Model', new mongoose.Schema({
-    Nane: String,
-    Time: Number
-}))
+
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+    res.render('ChaseTheBox', { title: 'Chase The Box' });
+});
+
+
+/* GET Comments */
+router.get('/ctb_highscores', function(req, res, next) {
+    console.log("In GET CTB High Scores route");
+
+    CTB_HighScore.find(function(err, scores) {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(scores);
+    });
+});
+
+
+/* POST -- add new comments */
+router.post('/ctb_highscores', function(req, res, next) {
+    console.log("In POST CTB High Scores route");
+
+    var score = new CTB_HighScore(req.body);
+
+    score.save(function(err, score) {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(score);
+    });
+});
+
+module.exports = router;
+
 
 /*var CTBSchema = mongoose.Schema({ //Defines the Schema for this database
     Name: String,
@@ -61,6 +102,7 @@ router.get('/CTBhighscores', function(req, res, next) {
         }
     });
 });
+
 router.get('/RTChighscores', function(req, res, next) {
     CTBscore.find().sort({ 'time': -1 }).exec(function(err, data) {
         console.log("getting race the clock high scores");
@@ -70,6 +112,28 @@ router.get('/RTChighscores', function(req, res, next) {
             console.log(data);
             res.json(data);
         }
+    });
+});
+
+
+/* POST */
+router.post('/CTBScore', function(req, res, next) {
+    
+})
+
+
+/* POST -- add new comments */
+router.post('/comments', function(req, res, next) {
+    console.log("In POST CTB SCORE route");
+
+    var score = new CTBscore(req.body);
+
+    score.save(function(err, score) {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(score);
     });
 });
 

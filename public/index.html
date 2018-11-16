@@ -3,37 +3,64 @@
 
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="javascripts/app.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+    <script src="javascripts/ChaseTheBox.js"></script>
 
+    <script src="javascripts/app.js"></script>
+    <style>
+        body {
+            background-color: green;
+        }
+
+        #butt {
+            position: absolute;
+            visibility: hidden;
+        }
+
+        #endgame {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 10;
+            visibility: hidden;
+
+        }
+
+        #instructions {
+            color: white;
+        }
+    </style>
 </head>
 
-<body class="container">
-    <div class="row">
-        <h1>Games</h1>
-    </div>
-    <div class="row">
-        <div class="col-sm-6" id="game_menu">
-            <ul>
-                <!--<button type="button" id="playRTC">Race the clock game</button>-->
-                <li><a href="/ChaseTheBox.html">Chase the box game</a></li>
-                <li><a href=/RaceTheClock.html>Race the clock game</a></li>
-                <li><a href="/GuessTheBox.html">Guess the box game</a></li>
-            </ul>
-        </div>
-        <div class="col-sm-6" id="high_scores">
-            <div class="row">
-                <button type="button" id="viewCTB">ChaseTheBox</button>
-                <button type="button" id="viewRTC">Race The Clock</button>
-                <!--<button type="button" id="viewGTB">Guess The Box</button>> This wouldnt make sense-->
-            </div>
-            <div class="row" id="highscorelist">
-
-            </div>
-        </div>
+<body ng-app="ChaseTheBox" ng-controller="MainCtrl">
+    <div>
+        <form ng-submit="start()">
+            <h id="instructions">Once you press the start button, you will have 10 seconds to click the box as many times as possible</h>
+            <button type="submit" id="start">Start Game</button>
+        </form>
+        
+        <form ng-submit="ChaseTheBox()">
+            <button id="butt" type="butt">click me</button>
+        </form>
+        
+        <form ng-submit="save()" id="saveForm">
+            <h id="gameOverHeading">You clicked the button 0 times in 10 seconds</h>
+            <br> <h id="namePrompt">Name: </h>
+            <input type="text" ng-model="nameText" id="nameText"></input>
+            <button id="save_CTB_score" type="submit">Save Score</button>
+        </form>
+        
+        <button id="endgame" type="button" onclick=end_game()>
+        End Game</button>
     </div>
 
-
+    <div id="highScoresList">
+        <h3>High Scores</h3>
+        <div ng-repeat="score in highScores | orderBy: '-score'">
+            {{score.name}} - score: {{score.score}}
+        </div>
+    </div>
 </body>
+
 
 </html>

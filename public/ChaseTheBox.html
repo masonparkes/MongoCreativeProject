@@ -3,6 +3,9 @@
 
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+    <script src="javascripts/ChaseTheBox.js"></script>
+
     <script src="javascripts/app.js"></script>
     <style>
         body {
@@ -110,16 +113,21 @@
     </script>
 </head>
 
-<body>
-    <h id="instructions">Once you press the start button, you will have 10 seconds to click the box as many times as possible</h>
-    <button id="start" type="button_1" onclick=start()>Start Game</button>
-    <button id="butt" type="button" onclick=ChaseTheBox()>
-     click me</button>
-    <button id="endgame" type="button" onclick=end_game()>
+<body ng-app="ChaseTheBox" ng-controller="MainCtrl">
+    <div>
+        <form ng-submit>
+            <h id="instructions">Once you press the start button, you will have 10 seconds to click the box as many times as possible</h>
+            <button id="start" type="button_1" onclick=start()>Start Game</button>
+            <button id="butt" type="button" onclick=ChaseTheBox()>click me</button>
+        </form>
+        
+        
+        <button id="endgame" type="button" onclick=end_game()>
         End Game</button>
+    </div>
 
-    <div id="results">
-
+    <div ng-repeat="score in highScores | orderBy: '-score'">
+        {{score.Name}} - score: {{score.score}}
     </div>
 </body>
 
