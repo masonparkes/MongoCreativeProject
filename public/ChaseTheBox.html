@@ -54,7 +54,7 @@
             end_time = new Date().getTime() / 1000;
             time = end_time - start_time;
             var inner = "<h>You clicked the button " + count + " times in 10 seconds</h>";
-            inner += "<button type='button' id='save_CTB_score'>Save Score</button>";
+            inner += "<button type='button' onclick=saveCTBscores()>Save Score</button>";
             var results = document.getElementById('results');
             results.innerHTML = inner;
             results.visibility = "visible";
@@ -76,6 +76,37 @@
             document.getElementById("start").style.visibility = "hidden";
             document.body.bgColor = "red";
         }
+        
+        function saveCTBscores() {
+            alert("im here");
+            getJSON('/CTBhighscores',
+                function(err, data) {
+                    if (err !== null) {
+                        alert('Something went wrong: ' + err);
+                    }
+                    else {
+                        alert('Your query count: ' + data.query.count);
+                    }
+                });
+        }
+        //I originally found this here: https://stackoverflow.com/questions/12460378/how-to-get-json-from-url-in-javascript
+        //but I think we'll want something more like what they are doing here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
+        //the mention POSTs and stuff so I think that is what we would want to do. 
+        var getJSON = function(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function() {
+                var status = xhr.status;
+                if (status === 200) {
+                    callback(null, xhr.response);
+                }
+                else {
+                    callback(status, xhr.response);
+                }
+            };
+            xhr.send();
+        };
     </script>
 </head>
 

@@ -3,7 +3,7 @@
 
 <head>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="javascripts/app.js"></script>
+    <script src="javascripts/RaceTheClockApp.js"></script>
     <style>
         #game-window {
             background-color: black;
@@ -75,26 +75,64 @@
 
         function win() {
 
-            alert("you won! Your time was " + time + " seconds! Click 'ok' to play again");
-            reset();
+            //alert("you won! Your time was " + time + " seconds! Click 'ok' to play again");
+            //reset();
+            var m = "<p>you won! Your time was " + time + " seconds! Click 'ok' to play again</p>";
+            m += "<button type='button' onclick=reset()>Play again</button>";
+            m += "<button type='button' onclick=saveRTCscores()>Save Score</button>";
+            var results = document.getElementById('results');
+            results.innerHTML = m;
+            //reset();
         }
 
         function reset() {
             document.getElementById('game-window').style.display = "none";
             document.getElementById('instructions').style.display = "none";
             document.getElementById('mover').style.left = "80px";
-
+            document.getElementById('results').innerHTML = "";
             startGame();
 
 
         }
 
         function lose() {
-            var m="<p>you didn't make it. Better luck next time... Click 'ok' to play again</p>";
+            var m = "<p>you didn't make it. Better luck next time... Click 'ok' to play again</p>";
+            m += "<button type='button' onclick=reset()>Play again</button>";
             var results = document.getElementById('results');
             results.innerHTML = m;
-            reset();
+            //reset();
         }
+
+        function saveRTCscores() {
+            alert("im here");
+            getJSON('/RTChighscores',
+                function(err, data) {
+                    if (err !== null) {
+                        alert('Something went wrong: ' + err);
+                    }
+                    else {
+                        alert('Your query count: ' + data.query.count);
+                    }
+                });
+        }
+        //I originally found this here: https://stackoverflow.com/questions/12460378/how-to-get-json-from-url-in-javascript
+        //but I think we'll want something more like what they are doing here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
+        //the mention POSTs and stuff so I think that is what we would want to do. 
+        var getJSON = function(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function() {
+                var status = xhr.status;
+                if (status === 200) {
+                    callback(null, xhr.response);
+                }
+                else {
+                    callback(status, xhr.response);
+                }
+            };
+            xhr.send();
+        };
     </script>
 </head>
 
@@ -123,7 +161,7 @@
     </div>
     <button id="again" type="button" style="display:none" onclick=reset()>Play Again</button>
     <div id="results">
-        
+
     </div>
 
 

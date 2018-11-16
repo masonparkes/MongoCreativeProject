@@ -12,11 +12,7 @@ $(document).ready(function() {
         });
 
     });
-    /*
-    //I'm not sure this would be needed
-    //I was worried about potential problems with going to different pages for the games and then
-    //trying to access the databases from those pages, and organizing functions and all that, but I think
-    //we should be able to make it work. 
+    
     $("#viewRTC").click(function() {
         //get high scores from database
         //put them in the highscore div
@@ -29,6 +25,15 @@ $(document).ready(function() {
             $("#highscorelist").html(list);
         });
     });
+    
+    $("#saveCTBscores").click(function(){
+        alert("it works");
+    })
+    /*
+    //I'm not sure this would be needed
+    //I was worried about potential problems with going to different pages for the games and then
+    //trying to access the databases from those pages, and organizing functions and all that, but I think
+    //we should be able to make it work. 
     $("#playRTC").click(function() {
         var newHTML=getGamehtml("RTC");
         $("#game").html(newHTML);
